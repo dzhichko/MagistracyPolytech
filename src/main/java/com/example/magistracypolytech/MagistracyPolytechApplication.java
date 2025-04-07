@@ -16,6 +16,7 @@ public class MagistracyPolytechApplication {
         EducationProgramService service = new EducationProgramService();
         System.out.println(service.getProgramList());
 
+
         SpringApplication.run(MagistracyPolytechApplication.class, args);
     }
 

@@ -23,4 +23,10 @@ public class AuthRequest {
             example = "qwerty"
     )
     private String password;
+
+    @Schema(
+            description = "Почта пользвователя",
+            example = "qwerty@domain.com"
+    )
+    private String email;
 }
