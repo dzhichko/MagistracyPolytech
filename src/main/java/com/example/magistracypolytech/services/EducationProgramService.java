@@ -1,46 +1,45 @@
 package com.example.magistracypolytech.services;
-import com.example.magistracypolytech.dto.EducationProgram;
+
+
+import com.example.magistracypolytech.models.EducationProgram;
+import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedOutputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.io.OutputStream;
 import java.util.List;
+
 
 @Service
 public class EducationProgramService {
-    private static final String AJAX_URL = "https://www.spbstu.ru/abit/ajax_groups.php";
 
-    public List<EducationProgram> getProgramList() throws IOException {
-        List<EducationProgram> programList = new ArrayList<>();
+    private final EducationProgramRepository programRepository;
 
-        Connection.Response response = Jsoup.connect(AJAX_URL)
-                .method(Connection.Method.POST)
-                .data("ABITURIENT_LEVEL_ID", "2")
-                .data("MEGA_ID", "")
-                .data("CAMPAGIN_ID", "1")
-                .data("form_1", "1")
-                .data("finance_1", "1")
-                .userAgent("Mozilla/5.0")
-                .referrer("https://www.spbstu.ru/abit/master/to-choose-the-direction-of-training/education-program/")
+    @Autowired
+    public EducationProgramService(EducationProgramRepository programRepository){
+        this.programRepository = programRepository;
+    }
+
+    public List<EducationProgram> getAllPrograms(){
+        return programRepository.findAll();
+    }
+
+    private void savePdfFromUrl(String url, String filename) throws IOException {
+        Connection.Response response = Jsoup.connect(url)
+                .ignoreContentType(true)
                 .execute();
 
-        Document doc = response.parse();
-
-        Elements programs = doc.select(".prof-item__header div");
-
-        for (Element program : programs) {
-            String text = program.text();
-            String[] parts = text.split(" ", 2);
-            if (parts.length == 2) {
-                programList.add(new EducationProgram(parts[0], parts[1]));
-            }
+        try (OutputStream out = new BufferedOutputStream(new FileOutputStream(filename))) {
+            out.write(response.bodyAsBytes());
         }
-
-        return programList;
     }
+
+
+
 }
+

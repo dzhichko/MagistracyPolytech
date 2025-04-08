@@ -35,19 +35,16 @@ public class AuthController {
 
     private final AuthenticationManager authenticationManager;
     private final JwtTokenUtil jwtTokenUtil;
-    private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
     @Autowired
     public AuthController(AuthenticationManager authenticationManager,
                           JwtTokenUtil jwtTokenUtil,
-                          UserRepository userRepository,
                           PasswordEncoder passwordEncoder,
                           UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
     }
@@ -159,7 +156,7 @@ public class AuthController {
         String username = authRequest.getUsername();
         String password = authRequest.getPassword();
 
-        if (userRepository.findByUsername(username).isPresent()) {
+        if (userService.isPresentByUsername(username)) {
             return ResponseEntity
                     .status(HttpStatus.CONFLICT)
                     .body(Map.of("error", "User already exists"));
@@ -170,7 +167,7 @@ public class AuthController {
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(Role.USER);
 
-        userRepository.save(user);
+        userService.save(user);
 
         return ResponseEntity.ok(Map.of(
                 "message", "User registered successfully"

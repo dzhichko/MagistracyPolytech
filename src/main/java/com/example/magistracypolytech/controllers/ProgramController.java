@@ -1,11 +1,13 @@
 package com.example.magistracypolytech.controllers;
 
-import com.example.magistracypolytech.dto.EducationProgram;
+import com.example.magistracypolytech.dto.EducationProgramDTO;
+import com.example.magistracypolytech.models.EducationProgram;
 import com.example.magistracypolytech.services.EducationProgramService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +21,10 @@ import java.util.List;
 @Tag(name = "Education Programs", description = "Управление образовательными программами")
 public class ProgramController {
 
-    private final EducationProgramService programParser;
+    private final EducationProgramService programService;
 
-    public ProgramController(EducationProgramService programParser) {
-        this.programParser = programParser;
+    public ProgramController(EducationProgramService programService) {
+        this.programService = programService;
     }
 
     @GetMapping("/programs")
@@ -38,11 +40,7 @@ public class ProgramController {
             }
     )
     public ResponseEntity<List<EducationProgram>> getPrograms(Model model) throws IOException {
-        List<EducationProgram> res = programParser.getProgramList();
-        if(res == null || res.isEmpty()){
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(res);
+        return ResponseEntity.status(HttpStatus.OK).body(programService.getAllPrograms());
     }
 }
 

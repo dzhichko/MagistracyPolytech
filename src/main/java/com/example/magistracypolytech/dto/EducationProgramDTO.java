@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EducationProgram {
+public class EducationProgramDTO {
     @Schema(
             description = "Код направления подготовки",
             example = "01.04.02"
