@@ -27,4 +27,12 @@ public class UserService {
         return user.filter(value -> passwordEncoder.matches(password, value.getPassword())).isPresent();
     }
 
+    public void save(User user){
+        userRepository.save(user);
+    }
+
+    public boolean isPresentByUsername(String username){
+        return userRepository.findByUsername(username).isPresent();
+    }
+
 }
