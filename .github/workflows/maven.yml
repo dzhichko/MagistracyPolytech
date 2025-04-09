@@ -18,7 +18,7 @@ jobs:
           POSTGRES_PASSWORD: ${{ secrets.DB_PASSWORD }}
           POSTGRES_DB: ${{ secrets.DB_NAME }}
         ports:
-          - 5432:5432
+          - ${{ secrets.DB_PORT }}:5432
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -37,6 +37,12 @@ jobs:
         
     - name: Build with Maven
       run: mvn -B package --file pom.xml
+      env:
+        DB_URL: ${{ secrets.DB_URL }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_USERNAME: ${{ secrets.DB_USERNAME }}
+        MAIL_USERNAME: ${{ secrets.MAIL_USERNAME }}
+        MAIL_PASSWORD: ${{ secrets.MAIL_PASSWORD }}
 
     - name: Update dependency graph
       uses: advanced-security/maven-dependency-submission-action@571e99aab1055c2e71a1e2309b9691de18d6b7d6
