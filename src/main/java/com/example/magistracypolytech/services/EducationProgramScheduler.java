@@ -2,8 +2,11 @@ package com.example.magistracypolytech.services;
 
 import com.example.magistracypolytech.dto.EducationProgramDTO;
 import com.example.magistracypolytech.models.EducationProgram;
+import com.example.magistracypolytech.models.EmailDTO;
+import com.example.magistracypolytech.models.User;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.Email;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -18,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,10 +29,14 @@ import java.util.Optional;
 public class EducationProgramScheduler {
     private static final String AJAX_URL = "https://www.spbstu.ru/abit/ajax_groups.php";
     private static final String DOWNLOAD_URL = "https://www.spbstu.ru/";
-
+    private final EmailServiceImpl emailService;
+    private final UserFavoriteProgramService userFavoriteProgramService;
     private final EducationProgramRepository programRepository;
     @Autowired
-    public EducationProgramScheduler(EducationProgramRepository programRepository) {
+    public EducationProgramScheduler(EducationProgramRepository programRepository, UserFavoriteProgramService userFavoriteProgramService,
+                                     EmailServiceImpl emailService) {
+        this.emailService = emailService;
+        this.userFavoriteProgramService = userFavoriteProgramService;
         this.programRepository = programRepository;
     }
 
@@ -74,6 +82,14 @@ public class EducationProgramScheduler {
                         Optional<EducationProgram> existingProgramOpt = programRepository.findByCode(parts[0]);
                         if (existingProgramOpt.isPresent()) {
                             EducationProgram existingProgram = existingProgramOpt.get();
+
+                            if(!Arrays.equals(existingProgram.getFileData(), pdfData)){
+                                List<EmailDTO> emailsToNotified = userFavoriteProgramService.getUsersEmailByProgramId(existingProgram.getId());
+                                emailsToNotified.forEach(m -> emailService.sendSimpleEmail(m.getEmail(),
+                                        "Dear "+ m.getUsername() + " " + existingProgram.getName(),
+                                        "Dear "+ m.getUsername() + " " + existingProgram.getName() + " has been changed!"));
+                            }
+
                             existingProgram.setName(parts[1]);
                             existingProgram.setFileData(pdfData);
                             programRepository.save(existingProgram);

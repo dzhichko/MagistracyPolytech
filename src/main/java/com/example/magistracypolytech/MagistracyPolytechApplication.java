@@ -7,14 +7,14 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 @SpringBootApplication
 @EnableScheduling
 public class MagistracyPolytechApplication {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
         dotenv.entries().forEach(e -> System.setProperty(e.getKey(), e.getValue()));
-
 
         SpringApplication.run(MagistracyPolytechApplication.class, args);
     }
