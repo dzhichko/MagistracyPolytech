@@ -17,11 +17,12 @@ import java.time.LocalDateTime;
 public class UserFavoriteProgram {
 
     @Id
+    private long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Id
     @ManyToOne
     @JoinColumn(name = "program_id", nullable = false)
     private EducationProgram program;
