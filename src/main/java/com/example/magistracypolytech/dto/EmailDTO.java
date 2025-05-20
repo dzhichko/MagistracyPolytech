@@ -1,4 +1,4 @@
-package com.example.magistracypolytech.models;
+package com.example.magistracypolytech.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

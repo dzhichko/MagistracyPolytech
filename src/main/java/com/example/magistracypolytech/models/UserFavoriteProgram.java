@@ -15,7 +15,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Table(name = "user_favorite_programs")
 public class UserFavoriteProgram {
-
     @Id
     private long id;
 

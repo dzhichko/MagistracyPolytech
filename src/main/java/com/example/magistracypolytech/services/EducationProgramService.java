@@ -1,7 +1,7 @@
 package com.example.magistracypolytech.services;
 
 
-import com.example.magistracypolytech.models.EducationProgram;
+import com.example.magistracypolytech.dto.EducationProgramDTO;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
@@ -13,6 +13,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -25,8 +26,11 @@ public class EducationProgramService {
         this.programRepository = programRepository;
     }
 
-    public List<EducationProgram> getAllPrograms(){
-        return programRepository.findAll();
+    public List<EducationProgramDTO> getAllPrograms(){
+        return programRepository.findAll().
+                stream().map(program -> EducationProgramDTO.builder()
+                        .name(program.getName())
+                        .code(program.getCode()).build()).collect(Collectors.toList());
     }
 
     private void savePdfFromUrl(String url, String filename) throws IOException {

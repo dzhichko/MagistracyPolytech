@@ -2,8 +2,7 @@ package com.example.magistracypolytech.controllers;
 
 import com.example.magistracypolytech.services.EmailServiceImpl;
 import jakarta.mail.MessagingException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,21 +12,19 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
 
 @RestController
+@Slf4j
 @RequestMapping("/email")
 public class EmailController {
-
-    private static final Logger LOG = LoggerFactory.getLogger(EmailController.class);
 
     @Autowired
     EmailServiceImpl emailService;
 
     @GetMapping(value = "/simple-email/{user-email}")
     public @ResponseBody ResponseEntity sendSimpleEmail(@PathVariable("user-email") String email) {
-
         try {
             emailService.sendSimpleEmail(email, "Welcome", "This is a welcome email for your!!");
         } catch (MailException mailException) {
-            LOG.error("Error while sending out email..{}", mailException.getStackTrace());
+            log.error("Error while sending out email..{}", mailException.getStackTrace());
             return new ResponseEntity<>("Unable to send email", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
@@ -41,7 +38,7 @@ public class EmailController {
             emailService.sendEmailWithAttachment(email, "Order Confirmation", "Thanks for your recent order",
                     "classpath:purchase_order.pdf");
         } catch (MessagingException | FileNotFoundException mailException) {
-            LOG.error("Error while sending out email..{}", mailException.getStackTrace());
+            log.error("Error while sending out email..{}", mailException.getStackTrace());
             return new ResponseEntity<>("Unable to send email", HttpStatus.INTERNAL_SERVER_ERROR);
         }
 

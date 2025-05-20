@@ -1,5 +1,6 @@
-package com.example.magistracypolytech.models;
+package com.example.magistracypolytech.security;
 
+import com.example.magistracypolytech.models.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

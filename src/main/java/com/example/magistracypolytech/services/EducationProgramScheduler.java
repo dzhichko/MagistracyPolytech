@@ -1,26 +1,22 @@
 package com.example.magistracypolytech.services;
 
-import com.example.magistracypolytech.dto.EducationProgramDTO;
 import com.example.magistracypolytech.models.EducationProgram;
-import com.example.magistracypolytech.models.EmailDTO;
-import com.example.magistracypolytech.models.User;
+import com.example.magistracypolytech.dto.EmailDTO;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.Email;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +47,7 @@ public class EducationProgramScheduler {
     }
 
 
+    @CacheEvict(value = "programs", allEntries = true)
     public void setEducationPrograms(){
         try {
             Connection.Response response = Jsoup.connect(AJAX_URL)
