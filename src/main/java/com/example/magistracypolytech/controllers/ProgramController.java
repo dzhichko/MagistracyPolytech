@@ -1,7 +1,6 @@
 package com.example.magistracypolytech.controllers;
 
 import com.example.magistracypolytech.dto.EducationProgramDTO;
-import com.example.magistracypolytech.models.User;
 import com.example.magistracypolytech.security.CustomUserDetails;
 import com.example.magistracypolytech.services.EducationProgramService;
 import com.example.magistracypolytech.services.UserFavouriteProgramService;
@@ -13,7 +12,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

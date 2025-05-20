@@ -2,7 +2,6 @@ package com.example.magistracypolytech.exceptions;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.apache.coyote.BadRequestException;
-import org.springframework.boot.autoconfigure.batch.BatchTaskExecutor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
