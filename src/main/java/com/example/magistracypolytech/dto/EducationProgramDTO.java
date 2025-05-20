@@ -12,17 +12,20 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 public class EducationProgramDTO implements Serializable {
+
+    private long id;
+
     @Schema(
             description = "Код направления подготовки",
             example = "01.04.02"
     )
     private String code;
+
     @Schema(
             description = "Название образовательной программы",
             example = "Прикладная математика и информатика"
     )
     private String name;
-
 
     @Override
     public String toString() {

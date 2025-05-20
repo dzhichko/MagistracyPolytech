@@ -4,6 +4,7 @@ import com.example.magistracypolytech.models.EducationProgram;
 import com.example.magistracypolytech.dto.EmailDTO;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import jakarta.annotation.PostConstruct;
+import lombok.RequiredArgsConstructor;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,19 +23,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class EducationProgramScheduler {
     private static final String AJAX_URL = "https://www.spbstu.ru/abit/ajax_groups.php";
     private static final String DOWNLOAD_URL = "https://www.spbstu.ru/";
+
     private final EmailServiceImpl emailService;
-    private final UserFavoriteProgramService userFavoriteProgramService;
+    private final UserFavouriteProgramService userFavouriteProgramService;
     private final EducationProgramRepository programRepository;
-    @Autowired
-    public EducationProgramScheduler(EducationProgramRepository programRepository, UserFavoriteProgramService userFavoriteProgramService,
-                                     EmailServiceImpl emailService) {
-        this.emailService = emailService;
-        this.userFavoriteProgramService = userFavoriteProgramService;
-        this.programRepository = programRepository;
-    }
 
     @PostConstruct
     public void init() {
@@ -77,11 +73,12 @@ public class EducationProgramScheduler {
                     if (parts.length == 2) {
                         byte[] pdfData = downloadPdf(pdfUrl);
                         Optional<EducationProgram> existingProgramOpt = programRepository.findByCode(parts[0]);
+                        EducationProgram existingProgram;
                         if (existingProgramOpt.isPresent()) {
-                            EducationProgram existingProgram = existingProgramOpt.get();
+                            existingProgram = existingProgramOpt.orElseGet(EducationProgram::new);
 
                             if(!Arrays.equals(existingProgram.getFileData(), pdfData)){
-                                List<EmailDTO> emailsToNotified = userFavoriteProgramService.getUsersEmailByProgramId(existingProgram.getId());
+                                List<EmailDTO> emailsToNotified = userFavouriteProgramService.getUsersEmailByProgramId(existingProgram.getId());
                                 emailsToNotified.forEach(m -> emailService.sendSimpleEmail(m.getEmail(),
                                         "Dear "+ m.getUsername() + " " + existingProgram.getName(),
                                         "Dear "+ m.getUsername() + " " + existingProgram.getName() + " has been changed!"));
@@ -89,11 +86,9 @@ public class EducationProgramScheduler {
 
                             existingProgram.setName(parts[1]);
                             existingProgram.setFileData(pdfData);
-                            programRepository.save(existingProgram);
                         } else {
-                            EducationProgram newProgram = new EducationProgram(parts[0], parts[1], pdfData);
-                            programRepository.save(newProgram);
-                        }
+                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData);
+                        } programRepository.save(existingProgram);
                     }
                 }
             }

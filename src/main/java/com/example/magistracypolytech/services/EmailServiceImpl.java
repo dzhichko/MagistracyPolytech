@@ -34,15 +34,4 @@ public class EmailServiceImpl  {
         simpleMailMessage.setText(message);
         emailSender.send(simpleMailMessage);
     }
-
-    public void sendEmailWithAttachment(String toAddress, String subject, String message, String attachment) throws MessagingException, FileNotFoundException {
-        MimeMessage mimeMessage = emailSender.createMimeMessage();
-        MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage, true);
-        messageHelper.setTo(toAddress);
-        messageHelper.setSubject(subject);
-        messageHelper.setText(message);
-        FileSystemResource file = new FileSystemResource(ResourceUtils.getFile(attachment));
-        messageHelper.addAttachment("Purchase Order", file);
-        emailSender.send(mimeMessage);
-    }
 }

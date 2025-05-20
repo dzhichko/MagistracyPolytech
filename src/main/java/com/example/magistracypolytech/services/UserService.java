@@ -2,6 +2,7 @@ package com.example.magistracypolytech.services;
 
 import com.example.magistracypolytech.models.User;
 import com.example.magistracypolytech.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -23,6 +24,16 @@ public class UserService {
         return passwordEncoder.matches(password, user.getPassword());
     }
 
+    public User findById(long id){
+        return userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
+    public User findByEmailOrUsername(String email, String username){
+        return userRepository.findByEmailOrUsername(email, username)
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+    }
+
     public User findByUsername(String username) {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new BadCredentialsException("Invalid username or password"));
@@ -33,6 +44,10 @@ public class UserService {
 
     public boolean isPresentByUsername(String username){
         return userRepository.findByUsername(username).isPresent();
+    }
+
+    public boolean isPresentByEmail(String email){
+        return userRepository.findByEmail(email).isPresent();
     }
 
 }

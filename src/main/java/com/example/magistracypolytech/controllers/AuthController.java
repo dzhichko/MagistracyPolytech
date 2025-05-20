@@ -13,8 +13,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.BadRequestException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @Tag(name = "Authentication", description = "API для аутентификации и регистрации пользователей")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -35,16 +37,6 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
-    @Autowired
-    public AuthController(AuthenticationManager authenticationManager,
-                          JwtTokenUtil jwtTokenUtil,
-                          PasswordEncoder passwordEncoder,
-                          UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-    }
 
     @PostMapping("/login")
     @Operation(
@@ -81,18 +73,11 @@ public class AuthController {
             }
     )
     public AuthResponse login(@RequestBody AuthRequest authRequest) throws BadRequestException {
-
-        if (authRequest.getUsername() == null || authRequest.getPassword() == null || authRequest.getEmail() == null) {
-            throw new BadRequestException("Username, login and email are required");
-        }
-
-        if (!userService.match(authRequest.getUsername(), authRequest.getPassword())) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
+        User user = checkCorrectLoginRequest(authRequest);
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        authRequest.getUsername(),
+                        user.getUsername(),
                         authRequest.getPassword()
                 )
         );
@@ -142,7 +127,7 @@ public class AuthController {
             throw new BadRequestException("Username, login and email are required");
         }
 
-        if (userService.isPresentByUsername(username)) {
+        if (userService.isPresentByUsername(username) || userService.isPresentByEmail(authRequest.getEmail())) {
             throw new UserAlreadyExistException();
         }
 
@@ -163,5 +148,22 @@ public class AuthController {
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return new AuthResponse(jwtTokenUtil.generateToken(authentication.getName()));
+    }
+
+
+    public User checkCorrectLoginRequest(AuthRequest authRequest) throws BadRequestException, BadCredentialsException {
+        if ((authRequest.getUsername() == null && authRequest.getEmail() == null) || authRequest.getPassword() == null) {
+            throw new BadRequestException("Username or email, and password are required");
+        }
+        User user;
+        try {
+            user = userService.findByEmailOrUsername(authRequest.getEmail(), authRequest.getUsername());
+            if (user == null || !userService.match(user.getUsername(), authRequest.getPassword())) {
+                throw new BadCredentialsException("Invalid username/email or password");
+            }
+            return user;
+        } catch (EntityNotFoundException exception) {
+            throw new BadCredentialsException("Invalid username/email or password");
+        }
     }
 }

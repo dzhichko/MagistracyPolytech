@@ -1,22 +1,14 @@
 package com.example.magistracypolytech;
 
-import io.github.cdimascio.dotenv.Dotenv;
-import org.aspectj.lang.annotation.Before;
-import org.junit.jupiter.api.BeforeAll;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MagistracyPolytechApplicationTests {
-    @BeforeAll
-    public static void loadEnv() {
-        Dotenv dotenv = Dotenv.configure().ignoreIfMissing().load();
-        dotenv.entries().forEach(e -> System.setProperty(e.getKey(), e.getValue()));
-    }
-
+@Slf4j
+class MagistracyPolytechApplicationTests extends AbstractContainerBaseTest {
     @Test
-    void contextLoads() {
-
+    public void start(){
+        log.info("Start of testing");
     }
-
 }
