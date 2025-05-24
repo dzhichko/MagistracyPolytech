@@ -39,11 +39,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors( cors -> {})
+                .cors(cors -> {})
                 .authenticationProvider(authenticationProvider())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login**", "/register**","/swagger-ui/**","/v3/api-docs/**").permitAll()
+                        .requestMatchers("/login**", "/register**","/swagger-ui/**","/v3/api-docs/**",
+                                "/programs/", "/programs/download/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)

@@ -31,5 +31,13 @@ public class EducationProgramService {
         return programRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Education program not found"));
     }
+
+    public byte[] getProgramFile(String code){
+        EducationProgram program = programRepository.findByCode(code).
+                orElseThrow(() -> new EntityNotFoundException("Education program: " + code + " not found"));
+
+        return program.getFileData();
+    }
+
 }
 

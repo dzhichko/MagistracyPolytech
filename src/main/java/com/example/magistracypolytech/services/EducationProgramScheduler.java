@@ -5,6 +5,7 @@ import com.example.magistracypolytech.dto.EmailDTO;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -23,6 +24,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class EducationProgramScheduler {
     private static final String AJAX_URL = "https://www.spbstu.ru/abit/ajax_groups.php";
     private static final String DOWNLOAD_URL = "https://www.spbstu.ru/";
@@ -44,6 +46,7 @@ public class EducationProgramScheduler {
 
     @CacheEvict(value = "programs", allEntries = true)
     public void setEducationPrograms(){
+        log.info("Scheduler start work!");
         try {
             Connection.Response response = Jsoup.connect(AJAX_URL)
                     .method(Connection.Method.POST)

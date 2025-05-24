@@ -8,17 +8,20 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
 @RequestMapping("/programs")
-@SecurityRequirement(name = "bearerAuth")
 @Tag(name = "Education Programs", description = "Управление образовательными программами")
 @RequiredArgsConstructor
 public class ProgramController {
@@ -33,7 +36,6 @@ public class ProgramController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Успешное получение списка программ"
-
                     )
             }
     )
@@ -43,6 +45,25 @@ public class ProgramController {
         return programService.getAllPrograms();
     }
 
+    @GetMapping(value = "/download/{code}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public void getProgramFile(@PathVariable String code, HttpServletResponse response) throws IOException {
+        byte[] pdfBytes = programService.getProgramFile(code);
+
+        if (pdfBytes == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader("Content-Disposition", "attachment; filename=\"program_" + code + ".pdf\"");
+        response.setContentLength(pdfBytes.length);
+
+        ServletOutputStream os = response.getOutputStream();
+        os.write(pdfBytes);
+        os.flush();
+    }
+
+    @SecurityRequirement(name="bearerAuth")
     @PostMapping("/favourite/{idProgram}")
     @PreAuthorize("isAuthenticated()")
     public void setFavouriteProgram(@PathVariable long idProgram, @AuthenticationPrincipal CustomUserDetails userDetails){
