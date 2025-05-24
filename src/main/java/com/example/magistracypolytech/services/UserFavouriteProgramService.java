@@ -19,10 +19,10 @@ public class UserFavouriteProgramService {
     private final UserService userService;
     private final EducationProgramService programService;
 
-    public void setFavouriteProgramToUser(long programId, long userId){
+    public void setFavouriteProgramToUser(String code, long userId){
         UserFavouriteProgram userFavoriteProgram = new UserFavouriteProgram();
         User user = userService.findById(userId);
-        EducationProgram educationProgram = programService.findById(programId);
+        EducationProgram educationProgram = programService.findByCode(code);
 
         userFavoriteProgram.setUser(user);
         userFavoriteProgram.setProgram(educationProgram);

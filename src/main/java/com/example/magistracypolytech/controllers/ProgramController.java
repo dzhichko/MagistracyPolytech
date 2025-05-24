@@ -64,11 +64,11 @@ public class ProgramController {
     }
 
     @SecurityRequirement(name="bearerAuth")
-    @PostMapping("/favourite/{idProgram}")
+    @PostMapping("/favourite/{code}")
     @PreAuthorize("isAuthenticated()")
-    public void setFavouriteProgram(@PathVariable long idProgram, @AuthenticationPrincipal CustomUserDetails userDetails){
+    public void setFavouriteProgram(@PathVariable String code, @AuthenticationPrincipal CustomUserDetails userDetails){
         long userId = userDetails.getId();
-        userFavouriteProgramService.setFavouriteProgramToUser(idProgram, userId);
+        userFavouriteProgramService.setFavouriteProgramToUser(code, userId);
     }
 
 }

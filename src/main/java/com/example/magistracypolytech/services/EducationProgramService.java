@@ -27,6 +27,10 @@ public class EducationProgramService {
                         .code(program.getCode()).build()).collect(Collectors.toList());
     }
 
+    public EducationProgram findByCode(String code){
+        return programRepository.findByCode(code).
+                orElseThrow(() -> new EntityNotFoundException("Education program: " + code + " not found"));
+    }
     public EducationProgram findById(long id){
         return programRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Education program not found"));
