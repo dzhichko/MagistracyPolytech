@@ -90,13 +90,15 @@ public class EducationProgramScheduler {
                             existingProgram.setFileData(pdfData);
                         } else {
                             existingProgram = new EducationProgram(parts[0], parts[1], pdfData);
-                        } programRepository.save(existingProgram);
+                        }
+
+                        programRepository.save(existingProgram);
                     }
                 }
             }
         }
         catch (IOException e){
-            System.out.println("Error with download education program info");
+            log.error("Error with download education program info");
         }
     }
 

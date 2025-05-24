@@ -55,7 +55,7 @@ public class ProgramController {
         }
 
         response.setContentType(MediaType.APPLICATION_PDF_VALUE);
-        response.setHeader("Content-Disposition", "attachment; filename=\"program_" + code + ".pdf\"");
+        response.setHeader("Content-Disposition", "inline; filename=\"program_" + code + ".pdf\"");
         response.setContentLength(pdfBytes.length);
 
         ServletOutputStream os = response.getOutputStream();
