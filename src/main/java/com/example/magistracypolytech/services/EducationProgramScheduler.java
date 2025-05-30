@@ -15,6 +15,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.swing.plaf.basic.BasicToolBarUI;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -48,28 +49,24 @@ public class EducationProgramScheduler {
     public void setEducationPrograms(){
         log.info("Scheduler start work!");
         try {
-            Connection.Response response = Jsoup.connect(AJAX_URL)
-                    .method(Connection.Method.POST)
-                    .data("ABITURIENT_LEVEL_ID", "2")
-                    .data("MEGA_ID", "")
-                    .data("CAMPAGIN_ID", "1")
-                    .data("form_1", "1")
-                    .data("finance_1", "1")
-                    .userAgent("Mozilla/5.0")
-                    .referrer("https://www.spbstu.ru/abit/master/to-choose-the-direction-of-training/education-program/")
-                    .execute();
 
-            Document doc = response.parse();
+            Document doc = Jsoup.connect(AJAX_URL).get();
 
             Elements programBlocks = doc.select(".prof-item");
 
-            for (Element programBlock : programBlocks) {
-                Element specElement = programBlock.selectFirst(".prof-item__spec");
-                Element linkElement = programBlock.selectFirst(".exams__item a[href]");
+            for (Element program : programBlocks) {
+                Element specElement = program.selectFirst(".prof-item__spec");
+                Element linkElement = program.selectFirst(".exams__item a[href]");
+                Element instituteElement = program.selectFirst(".prof-item__header img[alt]");
+                Element budgetElement = program.selectFirst(".funding__label:contains(Бюджет) + .funding__types .funding__places");
+                Element contractElement = program.selectFirst(".funding__label:contains(Контракт) + .funding__types .funding__places");
 
-                if (specElement != null && linkElement != null) {
+                if (specElement != null && linkElement != null && instituteElement != null) {
                     String fullText = specElement.text();
                     String pdfUrl = linkElement.attr("abs:href");
+                    String budgetPlaces = budgetElement != null ? budgetElement.text() : "0";
+                    String contractPlaces = contractElement != null ? contractElement.text() : "0";
+                    String instituteName = instituteElement.attr("alt");
 
                     String[] parts = fullText.split("\\s+", 2);
                     if (parts.length == 2) {
@@ -89,7 +86,7 @@ public class EducationProgramScheduler {
                             existingProgram.setName(parts[1]);
                             existingProgram.setFileData(pdfData);
                         } else {
-                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData);
+                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData, instituteName, budgetPlaces, contractPlaces);
                         }
 
                         programRepository.save(existingProgram);

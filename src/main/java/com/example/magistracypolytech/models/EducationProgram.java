@@ -29,10 +29,28 @@ public class EducationProgram {
     @Column(nullable = false, columnDefinition = "BYTEA")
     private byte[] fileData;
 
-    public EducationProgram(String code, String name, byte[] fileData){
+    @Column(nullable = false)
+    private String institution;
+
+    @Column
+    private String budgetPlace;
+
+    @Column
+    private String contractPlace;
+
+    public EducationProgram(String code, String name, byte[] fileData) {
         this.code = code;
         this.name = name;
         this.fileData = fileData;
+    }
+
+    public EducationProgram(String code, String name, byte[] fileData, String institution, String budgetPlace, String contractPlace) {
+        this.code = code;
+        this.name = name;
+        this.fileData = fileData;
+        this.institution = institution;
+        this.budgetPlace = budgetPlace;
+        this.contractPlace = contractPlace;
     }
 
 }
