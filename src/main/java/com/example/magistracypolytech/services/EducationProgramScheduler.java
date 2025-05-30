@@ -98,7 +98,7 @@ public class EducationProgramScheduler {
                             existingProgram.setName(parts[1]);
                             existingProgram.setFileData(pdfData);
                         } else {
-                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData);
+                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData, instituteName, budgetPlaces, contractPlaces);
                         }
 
                         programRepository.save(existingProgram);

@@ -38,12 +38,6 @@ public class EducationProgram {
     @Column
     private String contractPlace;
 
-    public EducationProgram(String code, String name, byte[] fileData) {
-        this.code = code;
-        this.name = name;
-        this.fileData = fileData;
-    }
-
     public EducationProgram(String code, String name, byte[] fileData, String institution, String budgetPlace, String contractPlace) {
         this.code = code;
         this.name = name;
