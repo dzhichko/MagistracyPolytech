@@ -54,7 +54,10 @@ public class EducationProgramScheduler {
                     .data("MEGA_ID", "")
                     .data("CAMPAGIN_ID", "1")
                     .data("form_1", "1")
+                    .data("form_2", "1")
+                    .data("form_3", "1")
                     .data("finance_1", "1")
+                    .data("finance_2", "1")
                     .userAgent("Mozilla/5.0")
                     .referrer("https://www.spbstu.ru/abit/master/to-choose-the-direction-of-training/education-program/")
                     .execute();
@@ -63,13 +66,21 @@ public class EducationProgramScheduler {
 
             Elements programBlocks = doc.select(".prof-item");
 
-            for (Element programBlock : programBlocks) {
-                Element specElement = programBlock.selectFirst(".prof-item__spec");
-                Element linkElement = programBlock.selectFirst(".exams__item a[href]");
-
-                if (specElement != null && linkElement != null) {
+            for (Element program : programBlocks) {
+                Element specElement = program.selectFirst(".prof-item__spec");
+                Element instituteLink = program.selectFirst(".prof-item__header > a[target=_blank]");
+                Element linkElement = program.selectFirst(".exams__item a[href]");
+                Element instituteElement = program.selectFirst(".prof-item__header img[alt]");
+                Element budgetElement = program.selectFirst(".funding__label:contains(Бюджет) + .funding__types .funding__places");
+                Element contractElement = program.selectFirst(".funding__label:contains(Контракт) + .funding__types .funding__places");
+                if (specElement != null && linkElement != null && instituteElement != null) {
                     String fullText = specElement.text();
                     String pdfUrl = linkElement.attr("abs:href");
+                    String budgetPlaces = budgetElement != null ? budgetElement.text() : "0";
+                    String contractPlaces = contractElement != null ? contractElement.text() : "0";
+                    String instituteName = instituteElement.attr("alt");
+
+                    if (!fullText.contains("_")) continue;
 
                     String[] parts = fullText.split("\\s+", 2);
                     if (parts.length == 2) {
@@ -111,6 +122,5 @@ public class EducationProgramScheduler {
             return in.readAllBytes();
         }
     }
-
 
 }
