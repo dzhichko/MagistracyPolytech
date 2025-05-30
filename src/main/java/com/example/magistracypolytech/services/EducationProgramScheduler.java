@@ -68,19 +68,17 @@ public class EducationProgramScheduler {
 
             for (Element program : programBlocks) {
                 Element specElement = program.selectFirst(".prof-item__spec");
-                Element instituteLink = program.selectFirst(".prof-item__header > a[target=_blank]");
                 Element linkElement = program.selectFirst(".exams__item a[href]");
                 Element instituteElement = program.selectFirst(".prof-item__header img[alt]");
                 Element budgetElement = program.selectFirst(".funding__label:contains(Бюджет) + .funding__types .funding__places");
                 Element contractElement = program.selectFirst(".funding__label:contains(Контракт) + .funding__types .funding__places");
+
                 if (specElement != null && linkElement != null && instituteElement != null) {
                     String fullText = specElement.text();
                     String pdfUrl = linkElement.attr("abs:href");
                     String budgetPlaces = budgetElement != null ? budgetElement.text() : "0";
                     String contractPlaces = contractElement != null ? contractElement.text() : "0";
                     String instituteName = instituteElement.attr("alt");
-
-                    if (!fullText.contains("_")) continue;
 
                     String[] parts = fullText.split("\\s+", 2);
                     if (parts.length == 2) {
@@ -122,5 +120,6 @@ public class EducationProgramScheduler {
             return in.readAllBytes();
         }
     }
+
 
 }

@@ -24,7 +24,11 @@ public class EducationProgramService {
                 stream().map(program -> EducationProgramDTO.builder()
                         .id(program.getId())
                         .name(program.getName())
-                        .code(program.getCode()).build()).collect(Collectors.toList());
+                        .code(program.getCode())
+                        .institution(program.getInstitution())
+                        .budgetPlace(program.getBudgetPlace())
+                        .contractPlace(program.getContractPlace())
+                        .build()).collect(Collectors.toList());
     }
 
     public EducationProgram findByCode(String code){

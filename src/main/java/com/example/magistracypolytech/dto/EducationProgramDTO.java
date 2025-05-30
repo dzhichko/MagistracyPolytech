@@ -27,6 +27,12 @@ public class EducationProgramDTO implements Serializable {
     )
     private String name;
 
+    private String institution;
+
+    private String budgetPlace;
+
+    private String contractPlace;
+
     @Override
     public String toString() {
         return code + " - " + name;
