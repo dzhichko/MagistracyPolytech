@@ -71,5 +71,21 @@ public class ProgramController {
         userFavouriteProgramService.setFavouriteProgramToUser(code, userId);
     }
 
+    @SecurityRequirement(name="bearerAuth")
+    @DeleteMapping("/favourite/{code}")
+    @PreAuthorize("isAuthenticated()")
+    public void deleteFavouriteProgram(@PathVariable String code, @AuthenticationPrincipal CustomUserDetails userDetails){
+        long userId = userDetails.getId();
+        userFavouriteProgramService.deleteFavouriteProgramByUserIdAndCode(code,userId);
+    }
+
+    @SecurityRequirement(name="bearerAuth")
+    @GetMapping("/favourite/")
+    @PreAuthorize("isAuthenticated()")
+    public List<EducationProgramDTO> getFavouriteProgram(@AuthenticationPrincipal CustomUserDetails userDetails){
+        long userId = userDetails.getId();
+        return userFavouriteProgramService.getFavouriteProgramsByUser(userId);
+    }
+
 }
 
