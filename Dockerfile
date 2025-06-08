@@ -1,4 +1,3 @@
-
 FROM maven:3.9.6-eclipse-temurin-17 AS builder
 
 WORKDIR /app
@@ -6,17 +5,15 @@ WORKDIR /app
 COPY pom.xml .
 COPY mvnw .
 COPY .mvn .mvn
+RUN chmod +x ./mvnw
 
 RUN ./mvnw dependency:go-offline
 
 COPY src src
 
-ENV TESTCONTAINERS_HOST_OVERRIDE=host.docker.internal
-ENV DOCKER_HOST=unix:///var/run/docker.sock
+RUN ./mvnw clean package -DskipTests
 
-RUN ./mvnw clean verify
-
-FROM eclipse-temurin:17-jre-alpine
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 

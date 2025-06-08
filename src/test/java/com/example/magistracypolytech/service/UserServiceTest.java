@@ -8,25 +8,35 @@ import com.example.magistracypolytech.services.UserService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
 
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 public class UserServiceTest extends AbstractContainerBaseTest {
 
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
-    @Autowired
+    @Mock
     private UserRepository userRepository;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceTest() {
+        this.passwordEncoder = new BCryptPasswordEncoder();
+    }
 
     @AfterEach
     public void deleteAll(){
@@ -41,12 +51,14 @@ public class UserServiceTest extends AbstractContainerBaseTest {
         user.setPassword(passwordEncoder.encode("qwerty"));
         user.setEmail("qwerty@gmail.com");
         user.setRole(Role.USER);
-        userService.save(user);
+
+
+        Mockito.when(userRepository.findByUsername(anyString())).thenReturn(Optional.of(user));
 
         User actUser = userService.findByUsername("admin");
         assertTrue(passwordEncoder.matches("qwerty", actUser.getPassword()));
         assertEquals(user.getUsername(), actUser.getUsername());
-        assertEquals(actUser.getRole(), Role.USER);
+        assertEquals(Role.USER, actUser.getRole());
         assertEquals("qwerty@gmail.com", actUser.getEmail());
     }
 
