@@ -40,7 +40,7 @@ async function registration(username,password,email) {
 
   try {
 
-      const response = await fetch('http://localhost:2222/register', {
+      const response = await fetch('/api/register', {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
           body: JSON.stringify({username, email, password}),
