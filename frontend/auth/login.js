@@ -31,7 +31,7 @@ async function checklogin() {
 async function login(username,password) {
 
 
-    const response = await fetch('/api/login', {
+    const response = await fetch('http://localhost:8080/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username, password }),
@@ -63,7 +63,7 @@ async function login(username,password) {
 
 
 function  massage(text){
-    const b =document.getElementById(" massage-span");
+    const b =document.getElementById("login-massage-span");
 
 
     if (text === "Вход успешен"){
