@@ -26,6 +26,11 @@ async function checkRegistration() {
         return;
     }
 
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        massage('Некорректный email');
+        return;
+    }
+
     await registration(username, password,email);
 
 }
@@ -42,12 +47,10 @@ async function registration(username,password,email) {
       });
 
       if (!response.ok) {
-          const errorData = await response.json(); // Читаем тело ошибки
-          throw new Error(errorData.message || 'Ошибка регистрации');
-      }
+          const errorMessage = await getErrorMessage(response);
+          massage(errorMessage);
+          throw new Error(errorMessage);
 
-      if (response.status === 409) {
-          throw new Error('Пользователь с таким именем уже существует');
       }
 
       const data = await response.json();
@@ -56,19 +59,27 @@ async function registration(username,password,email) {
       return data
 
   }catch (error){
-      if (error.message.includes('User already exist')) {
-          massage('Это имя пользователя уже занято. Попробуйте другое.');
-      } else {
-          massage(error.message || 'Ошибка при регистрации');
-      }
+
+      console.log(error.message || 'Ошибка при регистрации');
+
 
   }
 }
 
 function  massage(text){
-    const b =document.getElementById(" massage-span");
+    const b =document.getElementById("registration-massage-span");
     if (text === "Регистрация прошла успешно, авторизация произошла автоматически"){
         b.style.color=("#21a649");
     }
     b.textContent = text;
+}
+
+async function getErrorMessage(response){
+    switch(response.status){
+        case 400: return 'Некорректные данные';
+        case 401: return 'Unauthorized';
+        case 404: return 'Пользователь не найден';
+        case 409: return 'Пользователь уже существует';
+        case 500: return 'Ошибка на сервере, попробуйте позже';
+    }
 }

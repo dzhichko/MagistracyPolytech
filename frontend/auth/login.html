@@ -9,36 +9,26 @@
     <title>Title</title>
 </head>
 <body>
-
 <div class="authorization">
+    <div class="registaition-window">
 
-  <div class="registaition-window">
-
-    <div class="login-form">
-        <div class=" login-row">
-
-            <span class= "form-hint" > Введите логин либо e-mail </span>
-            <input type="text" class="field" id="username-input" placeholder="Логин">
+        <div class="login-form">
+            <div class=" login-row">
+                <span class= "form-hint" > Введите логин либо e-mail </span>
+                <input type="text" class="field" id="username-input" placeholder="Логин">
+            </div>
+            <div class="password-row">
+                <span class= "form-hint" > Введите пароль </span>
+                <input type="password" class="field" id="password-input" placeholder="Пароль">
+            </div>
+           <div class="buttons">
+          <button onclick="checklogin()" class="button" id="enter_button">Войти</button>
+               <a  class="button" id="reg_button" href="registration.html" > Зарегистрироваться</a>
+           </div>
+        <span id="login-massage-span"> </span>
 
         </div>
-
-        <div class="password-row">
-            <span class= "form-hint" > Введите пароль </span>
-            <input type="password" class="field" id="password-input" placeholder="Пароль">
-        </div>
-       <div class="buttons">
-      <button onclick="checklogin()" class="button" id="enter_button">Войти</button>
-
-      <a  class="button" id="reg_button" href="registration.html" > Зарегистрироваться</a>
-       </div>
-    <span id=" massage-span"> </span>
-
-    </div>
-  </div>
-
   </div>
 </div>
-
-
 </body>
 </html>
