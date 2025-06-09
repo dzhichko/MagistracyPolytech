@@ -24,11 +24,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.Collections;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -105,6 +102,8 @@ class ProgramControllerTest extends AbstractContainerBaseTest {
 
     @Test
     void setFavouriteProgram_shouldCallService() throws Exception {
+        authenticateWithCustomUserDetails(1L, "testuser", "USER");
+
         mockMvc.perform(post("/programs/favourite/01.03.02"))
                 .andExpect(status().isOk());
 
@@ -113,6 +112,8 @@ class ProgramControllerTest extends AbstractContainerBaseTest {
 
     @Test
     void deleteFavouriteProgram_shouldCallService() throws Exception {
+        authenticateWithCustomUserDetails(1L, "testuser", "USER");
+
         mockMvc.perform(delete("/programs/favourite/01.03.02"))
                 .andExpect(status().isOk());
 
@@ -121,6 +122,7 @@ class ProgramControllerTest extends AbstractContainerBaseTest {
 
     @Test
     void getFavouritePrograms_shouldReturnList() throws Exception {
+        authenticateWithCustomUserDetails(1L, "testuser", "USER");
         EducationProgramDTO program = new EducationProgramDTO();
         when(userFavouriteProgramService.getFavouriteProgramsByUser(1L)).thenReturn(List.of(program));
 
@@ -128,6 +130,14 @@ class ProgramControllerTest extends AbstractContainerBaseTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.length()").value(1));
     }
+
+    private void authenticateWithCustomUserDetails(Long userId, String username, String role) {
+        CustomUserDetails customUserDetails = new CustomUserDetails(new User(userId, username, "password","qwerty@mail.com", Role.valueOf(role)));
+        UsernamePasswordAuthenticationToken auth =
+                new UsernamePasswordAuthenticationToken(customUserDetails, null, customUserDetails.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(auth);
+    }
+
 
     @TestConfiguration
     static class MockConfig {

@@ -12,6 +12,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Profile("dev")
 public class EducationProgramScheduler {
     private static final String AJAX_URL = "https://www.spbstu.ru/abit/ajax_groups.php";
     private static final String DOWNLOAD_URL = "https://www.spbstu.ru/";

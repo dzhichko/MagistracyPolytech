@@ -146,7 +146,7 @@ async function updateFavCoursesList(){
             console.error('Требуется авторизация. Пожалуйста, войдите в систему.');
         }
 
-        const response =await fetch( 'http://localhost:2222/programs/favourite/ ',{
+        const response =await fetch( 'http://localhost:8080/programs/favourite/ ',{
 
             method: 'GET',
             headers:{'Content-Type': 'application/json',
@@ -200,7 +200,7 @@ async function deleteFavCourse(idProgram){
         message('Требуется авторизация. Пожалуйста, войдите в систему', idProgram);
         return;
     }
-    const response = await fetch(`http://localhost:2222/programs/favourite/${idProgram}`, {
+    const response = await fetch(`http://localhost:8080/programs/favourite/${idProgram}`, {
         method: 'DELETE',
         headers: {
             'Content-Type': 'application/json',
@@ -237,7 +237,7 @@ async function addFavCourses(idProgram) {
 
         }
 
-        const response = await fetch(`http://localhost:2222/programs/favourite/${idProgram}`, {
+        const response = await fetch(`http://localhost:8080/programs/favourite/${idProgram}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -298,7 +298,7 @@ function message(text,idProgram){
 async function getCoursesList(){
 
     // const jwtToken = localStorage.getItem('jwtToken');
-    const response = await  fetch(`http://localhost:2222/programs`, {
+    const response = await  fetch(`http://localhost:8080/programs`, {
         method: 'GET',
         headers: {
             'Accept': 'application/json',
@@ -406,7 +406,7 @@ async function downloadFile(elementId) {
         downloadWindow.document.write('<p>Загрузка PDF...</p>');
 
         // 2. Запрашиваем файл
-        const response = await fetch(`http://localhost:2222/programs/download/${elementId}`, {
+        const response = await fetch(`http://localhost:8080/programs/download/${elementId}`, {
             method: 'GET',
             headers: { 'Accept': 'application/pdf' },
         });
