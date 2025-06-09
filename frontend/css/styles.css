@@ -143,12 +143,12 @@ body.unauth .insert-button:hover{
     display: flex;
 }
 
-#registration-massage-span{
+#registration-message-span{
     font-weight: bolder;
     font-size: 14px;
 }
 
-#login-massage-span{
+#login-message-span{
     font-weight: bolder;
     font-size: 14px;
 }

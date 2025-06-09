@@ -6,20 +6,20 @@ async function checklogin() {
     // Базовая проверка
     if (!username || !password) {
 
-        massage('Все поля обязательны для заполнения!');
+        message('Все поля обязательны для заполнения!');
         return;
     }
 
     // Дополнительные проверки
     if (username.length < 4) {
 
-        massage('Логин должен содержать минимум 4 символа');
+        message('Логин должен содержать минимум 4 символа');
         return;
     }
 
     if (password.length < 6) {
 
-        massage('Пароль должен быть не менее 6 символов');
+        message('Пароль должен быть не менее 6 символов');
         return;
     }
 
@@ -40,7 +40,7 @@ async function login(username,password) {
     if (!response.ok) throw new Error('Ошибка входа');
 
     if (response.status === 401) {
-        massage('Неверные учетные данные');
+        message('Неверные учетные данные');
         throw new Error('Неверные учетные данные');
 
     }
@@ -50,7 +50,7 @@ async function login(username,password) {
 
     console.log('Ответ сервера:', token);
 
-    massage('Вход успешен');
+    message('Вход успешен');
     window.location.href = '../index.html';
     return token;
 
@@ -62,8 +62,8 @@ async function login(username,password) {
 
 
 
-function  massage(text){
-    const b =document.getElementById("login-massage-span");
+function  message(text){
+    const b =document.getElementById("login-message-span");
 
 
     if (text === "Вход успешен"){
