@@ -8,40 +8,33 @@
     display: flex;
     margin: auto;
     border-bottom: #aecbc5 solid 2px;
-
 }
-
-
 #new-button-id{
     background-color: #fff;
     border: none;
     font-weight: 700;
     font-size: 16px;
     color: rgb(88,88,88);
-
 }
-
 #new-button-id:hover{
     color: #d0492f;
 }
-
 .span-for-mess{
     font-weight: bolder;
     font-size: 14px;
-
-;
 }
-#registration-massage-span{
+
+#registration-message-span{
     font-weight: bolder;
     font-size: 14px;
 }
-#login-massage-span{
+
+#login-message-span{
     font-weight: bolder;
     font-size: 14px;
 }
 
 .registaition-window{
-
     margin-top: 100px ;
     height: auto;
     display: block;
@@ -49,8 +42,6 @@
     width: 100%;
     margin-left:  auto;
     margin-right:  auto;
-
-
     border-radius:30px ;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень */
     transition: box-shadow 0.3s ease; /* Плавный переход */
@@ -61,36 +52,29 @@
 
 .button-container{
     display: flex;
-
 }
 
 body.auth .button-for-add-fav{
     background-color: #fff;
-
     border: 1px solid #21a649 ;
     border-radius:30px ;
     margin-top: 10px;
-
     width: 100%;
     max-width: 200px;
     box-sizing: border-box;
-
 }
 
 body.unauth .button-for-add-fav{
     background-color: #fff;
-
     border: 1px solid #d0492f ;
     border-radius:30px ;
     margin-top: 10px;
     width: 100%;
     max-width: 200px;
-
     box-sizing: border-box;
-
     justify-content: center;
-
 }
+
 .insert-button-id:hover{
     color:#21a649;
 }
@@ -98,6 +82,7 @@ body.unauth .button-for-add-fav{
 body.unauth .insert-button:hover{
     color: #d0492f;
 }
+
 .insert-button{
     background-color: #fff;
     border: none;
@@ -106,7 +91,6 @@ body.unauth .insert-button:hover{
     color: rgb(88,88,88);
     margin: 5px;
     padding:0 ;
-
 }
 
 .download-button{
@@ -117,13 +101,10 @@ body.unauth .insert-button:hover{
     color: rgb(88,88,88);
     margin: 5px;
     padding:0 ;
-
 }
 
 .download-information{
-
     background-color: #fff;
-
     border: 1px solid #21a649 ;
     border-radius:30px ;
     margin-top: 10px;
@@ -131,21 +112,17 @@ body.unauth .insert-button:hover{
     width: 100%;
     max-width:25px;
     box-sizing: border-box;
-
-
 }
 
 .button{
-
     border: none;
     height: 25px;
     border-radius:30px ;
     justify-content: center;
-
-
 }
 
 #registration-button{
+    font-weight: 20;
     margin-top: 20px;
     margin-bottom: 20px;
     text-align: center;
@@ -164,11 +141,18 @@ body.unauth .insert-button:hover{
     padding-top: 20px;
     padding-bottom: 20px;
     display: flex;
-
-
-
-
 }
+
+#registration-massage-span{
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+#login-massage-span{
+    font-weight: bolder;
+    font-size: 14px;
+}
+
 #enter_button{
     text-align: center;
     width: 100%;
@@ -183,6 +167,7 @@ body.unauth .insert-button:hover{
 
 }
 #reg_button{
+    font-weight: 20;
     width: 100%;
     max-width: 180px;
     box-sizing: border-box;
@@ -190,12 +175,8 @@ body.unauth .insert-button:hover{
     display: flex;
     margin-right: 0;
     margin-left: auto;
-
-
-
-
-
 }
+
 .field{
     box-sizing: border-box;
     width: 300px;
@@ -216,10 +197,6 @@ body.unauth .insert-button:hover{
 .registaition-window .password-row{
     display: block;
     width: 100%;
-
-
-
-
 }
 
 .registaition-window .login-row{
@@ -327,32 +304,20 @@ body{
     color: #21a649
 }
 
-.main-header  .main-logo:hover {
-    opacity: .5
-}
-
 .main-header  .phone-mail {
 
+
+    margin-top: 2% ;
     width: 100%;
     min-width: 172px;
 
-    margin: auto;
-}
 
-
-.main-header  .phone-mail:hover span {
-    color: #21a649;
-    text-decoration: underline
 }
 
 button:hover{
     color: #21a649
 }
 
-
-.main-header  .phone-mail:hover i {
-    color: #21a649
-}
 
 .main-header  .phone-mail i,.main-header  .phone-mail span {
     float: left;

@@ -80,7 +80,7 @@ async function checkAutorization(){
             document.body.classList.add('auth');
         }
         else {
-            exit()
+            exit();
         }
     }
     else {
@@ -142,7 +142,7 @@ async function updateFavCoursesList(){
         const jwtToken = localStorage.getItem('jwtToken');
 
         if (!jwtToken) {
-            // massage('Требуется авторизация. Пожалуйста, войдите в систему.');
+            // message('Требуется авторизация. Пожалуйста, войдите в систему.');
             console.error('Требуется авторизация. Пожалуйста, войдите в систему.');
         }
 
@@ -172,7 +172,7 @@ async function toggleAddButton(idProgram)
 
     // Проверка наличия токена
     if (!jwtToken) {
-        massage('Требуется авторизация. Пожалуйста, войдите в систему', idProgram);
+        message('Требуется авторизация. Пожалуйста, войдите в систему', idProgram);
         return;
     }
 
@@ -197,7 +197,7 @@ async function deleteFavCourse(idProgram){
 
     // Проверка наличия токена
     if (!jwtToken) {
-        massage('Требуется авторизация. Пожалуйста, войдите в систему', idProgram);
+        message('Требуется авторизация. Пожалуйста, войдите в систему', idProgram);
         return;
     }
     const response = await fetch(`http://localhost:2222/programs/favourite/${idProgram}`, {
@@ -211,7 +211,7 @@ async function deleteFavCourse(idProgram){
 
     if (response) {
         if (response.status === 200) {
-            massage('Программа удалена из избранного', idProgram);
+            message('Программа удалена из избранного', idProgram);
             const text = 'Добавить в избранное';
             setButtonText(text,idProgram);
             await updateFavCoursesList();
@@ -227,12 +227,12 @@ async function addFavCourses(idProgram) {
 
         // Проверка наличия токена
         if (!jwtToken) {
-            massage('Требуется авторизация. Пожалуйста, войдите в систему', idProgram);
+            message('Требуется авторизация. Пожалуйста, войдите в систему', idProgram);
             return;
         }
 
         if (courseAlreadyAdd(idProgram)) {
-            massage('Программа уже добавлена',idProgram);
+            message('Программа уже добавлена',idProgram);
             return;
 
         }
@@ -248,7 +248,7 @@ async function addFavCourses(idProgram) {
 
         if (response) {
             if (response.status === 200) {
-                 massage('Программа добавлена в избранное =)', idProgram);
+                 message('Программа добавлена в избранное', idProgram);
                  setDeleteText(idProgram);
                  await updateFavCoursesList();
                  console.log('Программа добавлена в избранное (200)');
@@ -288,7 +288,7 @@ function  courseAlreadyAdd(idProgram){
     return status;
 }
 
-function massage(text,idProgram){
+function message(text,idProgram){
     const curCourseCard = document.getElementById(idProgram);
     const span = curCourseCard.querySelector('.span-for-mess');
     span.textContent='';
@@ -395,10 +395,6 @@ document.addEventListener('DOMContentLoaded', async function () {
     await getCoursesList();
 
 });
-
-
-
-
 
 async function downloadFile(elementId) {
     try {

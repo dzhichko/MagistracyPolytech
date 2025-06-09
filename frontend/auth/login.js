@@ -6,20 +6,20 @@ async function checklogin() {
     // Базовая проверка
     if (!username || !password) {
 
-        massage('Все поля обязательны для заполнения!');
+        message('Все поля обязательны для заполнения');
         return;
     }
 
     // Дополнительные проверки
     if (username.length < 4) {
 
-        massage('Логин должен содержать минимум 4 символа');
+        message('Логин должен содержать минимум 4 символа');
         return;
     }
 
     if (password.length < 6) {
 
-        massage('Пароль должен быть не менее 6 символов');
+        message('Пароль должен быть не менее 6 символов');
         return;
     }
 
@@ -37,7 +37,7 @@ async function login(username,password) {
 
         if (!response.ok) {
             const errorMessage = await getErrorMessage(response);
-            massage(errorMessage);
+            message(errorMessage);
             throw new Error(errorMessage);
         }
 
@@ -45,10 +45,11 @@ async function login(username,password) {
         localStorage.setItem('jwtToken', token); // Сохраняем токен
 
         console.log('Ответ сервера:', token);
-        massage('Вход успешен');
+        message('Вход успешен');
         if (window.opener && !window.opener.closed) {
             window.opener.location.reload();
             window.close();
+
         }
         else{
             window.location.href='../index.html';
@@ -57,8 +58,7 @@ async function login(username,password) {
     }
     catch (error) {
         console.error('Ошибка входа:',error);
-
-
+        message('Ошибка подключения к серверу')
     }
 }
 
@@ -71,8 +71,8 @@ async function getErrorMessage(response){
     }
 }
 
-function  massage(text){
-    const b =document.getElementById("login-massage-span");
+function  message(text){
+    const b =document.getElementById("login-message-span");
 
 
     if (text === "Вход успешен"){

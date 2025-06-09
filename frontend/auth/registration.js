@@ -7,27 +7,27 @@ async function checkRegistration() {
 
     // Базовая проверка
     if (!username || !password || !password2 || !email) {
-        massage('Все поля обязательны для заполнения!');
+        message('Все поля обязательны для заполнения!');
         return;
     }
 
     if (password !== password2) {
-        massage('Пароли не совпадают');
+        message('Пароли не совпадают');
         return;
     }
 
     if (username.length < 4) {
-        massage('Логин должен содержать минимум 4 символа');
+        message('Логин должен содержать минимум 4 символа');
         return;
     }
 
     if (password.length < 6) {
-        massage('Пароль должен быть не менее 6 символов');
+        message('Пароль должен быть не менее 6 символов');
         return;
     }
 
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        massage('Некорректный email');
+        message('Некорректный email');
         return;
     }
 
@@ -48,7 +48,7 @@ async function registration(username,password,email) {
 
       if (!response.ok) {
           const errorMessage = await getErrorMessage(response);
-          massage(errorMessage);
+          message(errorMessage);
           throw new Error(errorMessage);
 
       }
@@ -60,14 +60,14 @@ async function registration(username,password,email) {
 
   }catch (error){
 
-      console.log(error.message || 'Ошибка при регистрации');
-
+      console.error('Ошибка входа:',error);
+      message('Ошибка подключения к серверу')
 
   }
 }
 
-function  massage(text){
-    const b =document.getElementById("registration-massage-span");
+function  message(text){
+    const b =document.getElementById("registration-message-span");
     if (text === "Регистрация прошла успешно, авторизация произошла автоматически"){
         b.style.color=("#21a649");
     }
