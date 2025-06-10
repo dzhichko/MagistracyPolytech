@@ -2,6 +2,7 @@ package com.example.magistracypolytech.services;
 
 
 import com.example.magistracypolytech.dto.EducationProgramDTO;
+import com.example.magistracypolytech.mappers.EducationProgramMapper;
 import com.example.magistracypolytech.models.EducationProgram;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -19,16 +20,11 @@ public class EducationProgramService {
 
     private final EducationProgramRepository programRepository;
 
+    private final EducationProgramMapper programMapper;
+
     public List<EducationProgramDTO> getAllPrograms(){
         return programRepository.findAll().
-                stream().map(program -> EducationProgramDTO.builder()
-                        .id(program.getId())
-                        .name(program.getName())
-                        .code(program.getCode())
-                        .institution(program.getInstitution())
-                        .budgetPlace(program.getBudgetPlace())
-                        .contractPlace(program.getContractPlace())
-                        .build()).collect(Collectors.toList());
+                stream().map(programMapper::toDTO).collect(Collectors.toList());
     }
 
     public EducationProgram findByCode(String code){

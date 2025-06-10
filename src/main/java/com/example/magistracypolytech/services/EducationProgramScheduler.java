@@ -74,13 +74,15 @@ public class EducationProgramScheduler {
                 Element instituteElement = program.selectFirst(".prof-item__header img[alt]");
                 Element budgetElement = program.selectFirst(".funding__label:contains(Бюджет) + .funding__types .funding__places");
                 Element contractElement = program.selectFirst(".funding__label:contains(Контракт) + .funding__types .funding__places");
+                Element instituteShortElement = program.selectFirst(".prof-item__header > a:nth-child(3)");
 
-                if (specElement != null && linkElement != null && instituteElement != null) {
+                if (specElement != null && linkElement != null && instituteElement != null && instituteShortElement != null) {
                     String fullText = specElement.text();
                     String pdfUrl = linkElement.attr("abs:href");
                     String budgetPlaces = budgetElement != null ? budgetElement.text() : "0";
                     String contractPlaces = contractElement != null ? contractElement.text() : "0";
                     String instituteName = instituteElement.attr("alt");
+                    String instituteShortName = instituteShortElement.text();
 
                     String[] parts = fullText.split("\\s+", 2);
                     if (parts.length == 2) {
@@ -100,7 +102,7 @@ public class EducationProgramScheduler {
                             existingProgram.setName(parts[1]);
                             existingProgram.setFileData(pdfData);
                         } else {
-                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData, instituteName, budgetPlaces, contractPlaces);
+                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData, instituteName, budgetPlaces, contractPlaces, instituteShortName);
                         }
 
                         programRepository.save(existingProgram);

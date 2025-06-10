@@ -33,6 +33,8 @@ public class EducationProgramDTO implements Serializable {
 
     private String contractPlace;
 
+    private String instituteShortName;
+
     @Override
     public String toString() {
         return code + " - " + name;

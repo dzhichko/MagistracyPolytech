@@ -15,6 +15,7 @@ public class EducationProgramMapper {
                 .contractPlace(educationProgram.getContractPlace())
                 .budgetPlace(educationProgram.getBudgetPlace())
                 .institution(educationProgram.getInstitution())
+                .instituteShortName(educationProgram.getInstituteShortName())
                 .build();
     }
 }
