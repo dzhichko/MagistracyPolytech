@@ -1,44 +1,39 @@
 package com.example.magistracypolytech.services;
 
-import com.example.magistracypolytech.dto.EducationProgramDTO;
 import com.example.magistracypolytech.models.EducationProgram;
-import com.example.magistracypolytech.models.EmailDTO;
-import com.example.magistracypolytech.models.User;
+import com.example.magistracypolytech.dto.EmailDTO;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.validation.constraints.Email;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
+@Slf4j
+@Profile("dev")
 public class EducationProgramScheduler {
     private static final String AJAX_URL = "https://www.spbstu.ru/abit/ajax_groups.php";
     private static final String DOWNLOAD_URL = "https://www.spbstu.ru/";
+
     private final EmailServiceImpl emailService;
-    private final UserFavoriteProgramService userFavoriteProgramService;
+    private final UserFavouriteProgramService userFavouriteProgramService;
     private final EducationProgramRepository programRepository;
-    @Autowired
-    public EducationProgramScheduler(EducationProgramRepository programRepository, UserFavoriteProgramService userFavoriteProgramService,
-                                     EmailServiceImpl emailService) {
-        this.emailService = emailService;
-        this.userFavoriteProgramService = userFavoriteProgramService;
-        this.programRepository = programRepository;
-    }
 
     @PostConstruct
     public void init() {
@@ -51,7 +46,9 @@ public class EducationProgramScheduler {
     }
 
 
+    @CacheEvict(value = "programs", allEntries = true)
     public void setEducationPrograms(){
+        log.info("Scheduler start work!");
         try {
             Connection.Response response = Jsoup.connect(AJAX_URL)
                     .method(Connection.Method.POST)
@@ -59,7 +56,10 @@ public class EducationProgramScheduler {
                     .data("MEGA_ID", "")
                     .data("CAMPAGIN_ID", "1")
                     .data("form_1", "1")
+                    .data("form_2", "1")
+                    .data("form_3", "1")
                     .data("finance_1", "1")
+                    .data("finance_2", "1")
                     .userAgent("Mozilla/5.0")
                     .referrer("https://www.spbstu.ru/abit/master/to-choose-the-direction-of-training/education-program/")
                     .execute();
@@ -68,23 +68,32 @@ public class EducationProgramScheduler {
 
             Elements programBlocks = doc.select(".prof-item");
 
-            for (Element programBlock : programBlocks) {
-                Element specElement = programBlock.selectFirst(".prof-item__spec");
-                Element linkElement = programBlock.selectFirst(".exams__item a[href]");
+            for (Element program : programBlocks) {
+                Element specElement = program.selectFirst(".prof-item__spec");
+                Element linkElement = program.selectFirst(".exams__item a[href]");
+                Element instituteElement = program.selectFirst(".prof-item__header img[alt]");
+                Element budgetElement = program.selectFirst(".funding__label:contains(Бюджет) + .funding__types .funding__places");
+                Element contractElement = program.selectFirst(".funding__label:contains(Контракт) + .funding__types .funding__places");
+                Element instituteShortElement = program.selectFirst(".prof-item__header > a:nth-child(3)");
 
-                if (specElement != null && linkElement != null) {
+                if (specElement != null && linkElement != null && instituteElement != null && instituteShortElement != null) {
                     String fullText = specElement.text();
                     String pdfUrl = linkElement.attr("abs:href");
+                    String budgetPlaces = budgetElement != null ? budgetElement.text() : "0";
+                    String contractPlaces = contractElement != null ? contractElement.text() : "0";
+                    String instituteName = instituteElement.attr("alt");
+                    String instituteShortName = instituteShortElement.text();
 
                     String[] parts = fullText.split("\\s+", 2);
                     if (parts.length == 2) {
                         byte[] pdfData = downloadPdf(pdfUrl);
                         Optional<EducationProgram> existingProgramOpt = programRepository.findByCode(parts[0]);
+                        EducationProgram existingProgram;
                         if (existingProgramOpt.isPresent()) {
-                            EducationProgram existingProgram = existingProgramOpt.get();
+                            existingProgram = existingProgramOpt.orElseGet(EducationProgram::new);
 
                             if(!Arrays.equals(existingProgram.getFileData(), pdfData)){
-                                List<EmailDTO> emailsToNotified = userFavoriteProgramService.getUsersEmailByProgramId(existingProgram.getId());
+                                List<EmailDTO> emailsToNotified = userFavouriteProgramService.getUsersEmailByProgramId(existingProgram.getId());
                                 emailsToNotified.forEach(m -> emailService.sendSimpleEmail(m.getEmail(),
                                         "Dear "+ m.getUsername() + " " + existingProgram.getName(),
                                         "Dear "+ m.getUsername() + " " + existingProgram.getName() + " has been changed!"));
@@ -92,17 +101,17 @@ public class EducationProgramScheduler {
 
                             existingProgram.setName(parts[1]);
                             existingProgram.setFileData(pdfData);
-                            programRepository.save(existingProgram);
                         } else {
-                            EducationProgram newProgram = new EducationProgram(parts[0], parts[1], pdfData);
-                            programRepository.save(newProgram);
+                            existingProgram = new EducationProgram(parts[0], parts[1], pdfData, instituteName, budgetPlaces, contractPlaces, instituteShortName);
                         }
+
+                        programRepository.save(existingProgram);
                     }
                 }
             }
         }
         catch (IOException e){
-            System.out.println("Error with download education program info");
+            log.error("Error with download education program info");
         }
     }
 

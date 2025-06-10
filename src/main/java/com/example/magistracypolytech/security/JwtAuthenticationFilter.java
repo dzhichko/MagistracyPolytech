@@ -1,6 +1,5 @@
 package com.example.magistracypolytech.security;
 
-import com.example.magistracypolytech.models.CustomUserDetails;
 import com.example.magistracypolytech.services.CustomUserDetailService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -31,12 +30,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws ServletException, IOException {
 
-        if (request.getServletPath().equals("/login") || request.getServletPath().equals("/register")) {
+        if (request.getServletPath().equals("/login") || request.getServletPath().equals("/register") || request.getServletPath().equals("/swagger-ui") || request.getServletPath().equals("/v3/api-docs")) {
             chain.doFilter(request, response);
             return;
         }
 
-        String token = getJwtFromCookies(request);
+        String token = getJwtFromRequest(request);
         if (token != null && jwtTokenUtil.isTokenValid(token)) {
 
             String username = jwtTokenUtil.extractUsername(token);
@@ -57,6 +56,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         chain.doFilter(request, response);
     }
 
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader("Authorization");
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
 
     private String getJwtFromCookies(HttpServletRequest request) {
         Cookie[] cookies = request.getCookies();

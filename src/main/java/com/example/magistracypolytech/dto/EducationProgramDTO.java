@@ -2,27 +2,38 @@ package com.example.magistracypolytech.dto;
 
 
 import io.swagger.v3.oas.annotations.media.Schema;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class EducationProgramDTO {
+@Builder
+public class EducationProgramDTO implements Serializable {
+
+    private long id;
+
     @Schema(
             description = "Код направления подготовки",
             example = "01.04.02"
     )
     private String code;
+
     @Schema(
             description = "Название образовательной программы",
             example = "Прикладная математика и информатика"
     )
     private String name;
 
+    private String institution;
+
+    private String budgetPlace;
+
+    private String contractPlace;
+
+    private String instituteShortName;
 
     @Override
     public String toString() {

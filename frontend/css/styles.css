@@ -1,0 +1,730 @@
+
+#info-enter-mes{
+    font-weight: 700;
+    font-size: 16px;
+    color: rgb(88,88,88);
+    width: 100%;
+    min-width: 415px;
+    display: flex;
+    margin: auto;
+    border-bottom: #aecbc5 solid 2px;
+}
+#new-button-id{
+    background-color: #fff;
+    border: none;
+    font-weight: 700;
+    font-size: 16px;
+    color: rgb(88,88,88);
+}
+#new-button-id:hover{
+    color: #d0492f;
+}
+.span-for-mess{
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+#registration-message-span{
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+#login-message-span{
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+.registaition-window{
+    margin-top: 100px ;
+    height: auto;
+    display: block;
+    max-width: 400px;
+    width: 100%;
+    margin-left:  auto;
+    margin-right:  auto;
+    border-radius:30px ;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень */
+    transition: box-shadow 0.3s ease; /* Плавный переход */
+    box-sizing: border-box;
+    padding: 80px 50px 20px 50px;
+    border: 2px solid #aecbc5;
+}
+
+.button-container{
+    display: flex;
+}
+
+body.auth .button-for-add-fav{
+    background-color: #fff;
+    border: 1px solid #21a649 ;
+    border-radius:30px ;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 200px;
+    box-sizing: border-box;
+}
+
+body.unauth .button-for-add-fav{
+    background-color: #fff;
+    border: 1px solid #d0492f ;
+    border-radius:30px ;
+    margin-top: 10px;
+    width: 100%;
+    max-width: 200px;
+    box-sizing: border-box;
+    justify-content: center;
+}
+
+.insert-button-id:hover{
+    color:#21a649;
+}
+
+body.unauth .insert-button:hover{
+    color: #d0492f;
+}
+
+.insert-button{
+    background-color: #fff;
+    border: none;
+    font-weight: 700;
+    font-size: 16px;
+    color: rgb(88,88,88);
+    margin: 5px;
+    padding:0 ;
+}
+
+.download-button{
+    background-color: #fff;
+    border: none;
+    font-weight: 700;
+    font-size: 16px;
+    color: rgb(88,88,88);
+    margin: 5px;
+    padding:0 ;
+}
+
+.download-information{
+    background-color: #fff;
+    border: 1px solid #21a649 ;
+    border-radius:30px ;
+    margin-top: 10px;
+    margin-left: 20px;
+    width: 100%;
+    max-width:25px;
+    box-sizing: border-box;
+}
+
+.button{
+    border: none;
+    height: 25px;
+    border-radius:30px ;
+    justify-content: center;
+}
+
+#registration-button{
+    font-weight: 20;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+    width: 100%;
+    max-width: 180px;
+    padding-top: 4px;
+    box-sizing: border-box;
+    background-color: #aecbc5;
+    display: flex;
+    margin-left: 0;
+}
+
+.buttons{
+    width: auto;
+    height: 25px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    display: flex;
+}
+
+#registration-message-span{
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+#login-message-span{
+    font-weight: bolder;
+    font-size: 14px;
+}
+
+#enter_button{
+    text-align: center;
+    width: 100%;
+    max-width: 80px;
+    padding-top: 4px;
+    box-sizing: border-box;
+    background-color: #aecbc5;
+    display: flex;
+    margin-left: 0;
+
+
+
+}
+#reg_button{
+    font-weight: 20;
+    width: 100%;
+    max-width: 180px;
+    box-sizing: border-box;
+    border: 4px solid #aecbc5;
+    display: flex;
+    margin-right: 0;
+    margin-left: auto;
+}
+
+.field{
+    box-sizing: border-box;
+    width: 300px;
+    border: 1px solid #222222;
+    padding: 15px 20px;
+}
+
+.form-hint{
+    display: block;
+    font-size: 16px;
+    font-weight: bolder;
+    padding-top: 20px;
+    padding-bottom: 5px;
+    margin: auto;
+
+}
+
+.registaition-window .password-row{
+    display: block;
+    width: 100%;
+}
+
+.registaition-window .login-row{
+    display: block;
+
+}
+
+
+
+body{
+    margin: 0; /* Убираем стандартные отступы браузера */
+    padding: 0;
+    width: 100%; /* Растягиваем на всю ширину */
+    min-height: 100vh; /* Минимальная высота = высота экрана */
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    min-width: 900px;
+    background-color: #FAFAFA;
+    font-family:Ubuntu,Arial, serif;
+
+
+}
+
+.main-header {
+    height: 70px;
+    display: flex;
+    background: #fff;
+    width: 100%;
+    justify-content: center;
+    margin-bottom:2% ;
+    box-sizing: border-box;
+
+}
+
+.m-wrapper{
+    width: 100%;
+    max-width: 1440px;
+    justify-content: space-between;
+
+    display: flex;
+}
+
+.top-right-section{
+    display: flex;
+
+
+}
+
+.top-left-section{
+    display: flex;
+
+
+}
+
+.cabinet {
+    color: #585858;
+    font-size:16px ;
+    font-weight: bolder;
+    width: 100%;
+    padding-left: 35px ;
+    padding-right: 35px;
+
+}
+.personal-account {
+
+
+    box-sizing: content-box;
+
+    max-height: 20px;
+    height: auto;
+    margin: auto;
+    padding: 10px;
+    width: 100%;
+    max-width: 300px;
+    border: 1px solid #21a649 ;
+    border-radius:30px ;
+    text-align: center;
+    margin-right: 20px ;
+
+
+}
+
+.poly-logo {
+    display: flex;
+    width: auto;
+    height: 50px;
+    margin: 10px;
+}
+
+.main-header .main-logo {
+    font-size: 30px;
+    padding: 19px;
+    color: #585858;
+    float: left;
+    font-weight: bold;
+    text-transform: uppercase;
+    opacity: 1;
+    width: 100% ;
+    margin-right: auto;
+
+}
+
+.main-header .main-logo span {
+    color: #21a649
+}
+
+.main-header  .phone-mail {
+
+
+    margin-top: 2% ;
+    width: 100%;
+    min-width: 172px;
+
+
+}
+
+button:hover{
+    color: #21a649
+}
+
+
+.main-header  .phone-mail i,.main-header  .phone-mail span {
+    float: left;
+    transition: color 0.15s ease-in
+}
+
+.main-header .phone-mail i {
+    border-radius: 100%;
+    box-sizing: border-box;
+    display: block;
+    border: 1px #f8f8f8 solid;
+    width: 39px;
+    height: 39px;
+    color: #8e8e8e;
+    padding: 11px 11px
+}
+
+.main-header .phone-mail span {
+    font-size: 14px;
+    padding: 11px 10px;
+    color: #747474
+}
+
+.main-header  .phone-mail,.main-header  .main-logo {
+    display: flex;
+    height: 100%;
+}
+
+H1 {
+
+    box-sizing: border-box;
+    width: 100%;
+    font-size:40px ;
+    font-weight: normal;
+    margin-right: auto;
+    margin-left: auto;
+    letter-spacing: 3px;
+}
+
+.firstBlock{
+
+    border-top: 2px solid #21A649 ;
+    border-right: 3px solid #B5DDC1 ;
+    padding: 3% 0;
+}
+.secondBlock{
+
+    border-top: 2px solid #21A649 ;
+    padding: 3% 0;
+    border-bottom: 2px solid #21A649;
+    border-right: 3px solid #B5DDC1 ;
+
+}
+.thirdBlock {
+
+    padding: 3% 0;
+    border-bottom: 2px solid #21A649 ;
+}
+.OP {
+
+    border-bottom: 2px solid #21A649 ;
+    padding: 3% 0;
+}
+.DIS {
+
+    border-top: 2px solid #21A649 ;
+    padding: 3% 0;
+}
+
+.clear-button {
+    padding-top: 10px;
+    border: 0;
+    cursor: pointer;
+    background: #FAFAFA;;
+    height: 40px;
+}
+
+.clear-button-icon {
+    margin-top: 12px
+
+}
+
+.search-button {
+    margin-top: 10px;
+    background: #FAFAFA;
+    border: 0;
+    cursor: pointer;
+    height: 40px ;
+}
+.search-button-icon {
+     height: 40px;
+
+}
+.name-of-page {
+    box-sizing: border-box;
+    width: auto;
+    display: flex;
+    padding: 10px;
+}
+
+.top-bar {
+    margin-top: 100px;
+    display: flex;
+    width: 100%;
+}
+
+.search-bar {
+    margin-left: auto;
+
+}
+.shell {
+    box-sizing: border-box;
+    width: auto;
+    max-width: 1450px;
+    margin: auto;
+
+}
+
+.search-bar{
+    width: auto;
+}
+
+.search-container {
+    box-sizing: border-box;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    height: 60px;
+    padding:0 20px ;
+    width: 100%;
+    max-width: 850px;
+    min-width: 500px;
+    border: none;
+    border-radius:30px ;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень */
+    transition: box-shadow 0.3s ease; /* Плавный переход */
+}
+
+.search-input {
+    box-sizing: border-box;
+    background-color: #FAFAFA;
+    height: 45px;
+    margin-top: 10px;
+    width: auto;
+    border: none;
+    font-size: 20px;
+    min-width: 450px;
+    max-width: 800px;
+}
+
+.resultOfSearch{
+    font-family:Ubuntu,Arial, serif;
+    font-size:25px ;
+    font-weight: normal;
+    display: block;
+    padding: 3%
+
+}
+.count {
+    color: #21A649;
+}
+
+
+.search-input:focus {
+    outline: none;
+}
+
+.courses-list{
+    padding-top: 200px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+/*.main-information{*/
+/*    min-height: 200px;*/
+/*}*/
+
+.course-card{
+
+
+    height: auto;
+    display: block;
+    width: auto;
+    margin: 20px 20px;
+    border: none;
+    border-radius:30px ;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень */
+    transition: box-shadow 0.3s ease; /* Плавный переход */
+    box-sizing: border-box;
+    flex: 0 1 calc(30% - 20px );
+
+}
+
+@media (max-width: 1390px) {
+    .course-card {
+        flex: 1 1 calc(35% + 100px );
+
+    }
+    H1 {
+        font-size: 35px;
+    }
+}
+
+
+
+@media (max-width: 1300px) {
+    .top-bar {
+        flex-wrap: wrap;
+        flex: 0 1 1000px; /* Ширина элемента (максимум 200px) */
+    }
+    .search-bar {
+        margin: 0;
+    }
+    .search-container{
+        width: auto;
+    }
+
+}
+
+@media (max-width: 1300px) {
+    .cabinet {
+        font-size: 15px;
+    }
+}
+
+@media (max-width: 1200px) {
+    .cabinet {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 800px) {
+    .course-card {
+        flex: 0 1 100%; /* 1 блок в ряд на очень маленьких экранах */
+    }
+
+}
+
+.panel-head{
+
+    display: flex;
+    font-size: 14px;
+
+    padding: 20px 25px 5px 25px ;
+
+    height: 40px;
+    width: auto;
+    border-bottom: #21A649 1px solid ;
+}
+.panel-head-text{
+    display: flex;
+    align-items: center;
+}
+.text {
+    margin-left: 5px;
+
+
+}
+.point {
+    margin: 4px;
+}
+.content-block {
+    padding: 0px 5px ;
+    margin: 18px 30px;
+    display: block;
+
+    height: auto;
+    border-left: 3px #184180 solid;
+}
+
+.number-of-course {
+    border-bottom: #184180 1px solid;
+}
+
+.content-block-economist {
+    padding: 0px 5px ;
+    margin: 18px 30px;
+    display: block;
+    height: 150px;
+    border-left: 3px #3C5DAA solid;
+}
+
+.number-of-economist {
+    border-bottom: #3C5DAA 1px solid;
+}
+
+.content-block-program {
+    padding: 0px 5px ;
+    margin: 18px 30px;
+    display: block;
+    height: 150px;
+    border-left: 3px #5F407D solid;
+}
+
+.number-of-program {
+    border-bottom: #5F407D 1px solid;
+}
+
+.other-information {
+    display: flex;
+
+}
+p {
+    margin: 0;
+
+}
+.content{
+    box-sizing: border-box;
+    width: auto;
+    height: 60px;
+    padding: 0 10px;
+    margin-top: 10px;
+}
+
+
+a {
+    text-decoration: none;
+    color: black;
+
+}
+
+a:hover {
+    color: #21A649 ;
+}
+
+.footer-shell {
+    width: 100%;
+
+    height: 300px ;
+    background-color: #2f2f2f;
+
+
+}
+.footer-bar{
+    color: rgb(163, 163, 163);
+    box-sizing: border-box;
+    display: flex;
+    width: 100%;
+    max-width: 1400px;
+    margin: auto;
+    margin-top: 150px;
+    height: 300px;
+
+}
+
+
+
+ul{
+    list-style: none;
+    padding: 0;
+}
+
+.left-section{
+    margin: auto;
+
+}
+
+.central-section{
+    margin: auto;
+}
+.right-section{
+    margin: auto;
+
+}
+
+.right-section.fa-clock-o{
+    width: 10px;
+}
+
+.left-section a{
+    display: block;
+    color: rgb(163, 163, 163);
+
+}
+
+.central-section a{
+    display: block;
+    color: rgb(163, 163, 163);
+}
+
+
+.left-section a{
+    display: block;
+}
+.fa-calendar-days{
+    padding-top: 5px;
+    color: darkseagreen;
+}
+
+.fa-school {
+    padding-top: 5px;
+    color: #3C5DAA;
+}
+.fa-magnifying-glass{
+    color: #8E8E8E;
+}
+
+.fa-magnifying-glass:hover{
+
+    color: #21a649;
+}
+
+.fa-xmark {
+    color: #8E8E8E;
+}
+
+.fa-xmark:hover{
+    color: #21a649;
+}

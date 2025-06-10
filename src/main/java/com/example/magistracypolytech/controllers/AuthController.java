@@ -1,9 +1,10 @@
 package com.example.magistracypolytech.controllers;
 
 import com.example.magistracypolytech.dto.AuthRequest;
+import com.example.magistracypolytech.dto.AuthResponse;
+import com.example.magistracypolytech.exceptions.UserAlreadyExistException;
 import com.example.magistracypolytech.models.Role;
 import com.example.magistracypolytech.models.User;
-import com.example.magistracypolytech.repositories.UserRepository;
 import com.example.magistracypolytech.security.JwtTokenUtil;
 import com.example.magistracypolytech.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -12,11 +13,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
+import org.apache.coyote.BadRequestException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,10 +26,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
 
 @RestController
 @Tag(name = "Authentication", description = "API для аутентификации и регистрации пользователей")
+@RequiredArgsConstructor
 public class AuthController {
 
     private final AuthenticationManager authenticationManager;
@@ -38,16 +37,6 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final UserService userService;
 
-    @Autowired
-    public AuthController(AuthenticationManager authenticationManager,
-                          JwtTokenUtil jwtTokenUtil,
-                          PasswordEncoder passwordEncoder,
-                          UserService userService) {
-        this.authenticationManager = authenticationManager;
-        this.jwtTokenUtil = jwtTokenUtil;
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-    }
 
     @PostMapping("/login")
     @Operation(
@@ -83,40 +72,18 @@ public class AuthController {
                     )
             }
     )
-    public ResponseEntity<?> login(@RequestBody AuthRequest authRequest,
-                                   HttpServletResponse response) {
+    public AuthResponse login(@RequestBody AuthRequest authRequest) throws BadRequestException {
+        User user = checkCorrectLoginRequest(authRequest);
 
-        try {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        user.getUsername(),
+                        authRequest.getPassword()
+                )
+        );
 
-            if (authRequest.getUsername() == null || authRequest.getPassword() == null) {
-                return ResponseEntity.badRequest().body(
-                        Map.of("error", "Username and password are required")
-                );
-            }
-
-
-            Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            authRequest.getUsername(),
-                            authRequest.getPassword()
-                    )
-            );
-
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            String token = jwtTokenUtil.generateToken(authentication.getName());
-
-            Cookie jwtCookie = new Cookie("jwt", token);
-            jwtCookie.setHttpOnly(true);
-            jwtCookie.setPath("/");
-            jwtCookie.setMaxAge(60 * 60 * 24);
-            response.addCookie(jwtCookie);
-
-            return ResponseEntity.ok(Map.of("jwt", token));
-        } catch (BadCredentialsException e){
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(
-                    Map.of("error", "invalid username or password")
-            );
-        }
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new AuthResponse(jwtTokenUtil.generateToken(authentication.getName()));
     }
 
     @PostMapping("/register")
@@ -152,25 +119,51 @@ public class AuthController {
                     )
             }
     )
-    public ResponseEntity<?> register(@RequestBody AuthRequest authRequest) {
+    public AuthResponse register(@RequestBody AuthRequest authRequest) throws BadRequestException {
         String username = authRequest.getUsername();
         String password = authRequest.getPassword();
 
-        if (userService.isPresentByUsername(username)) {
-            return ResponseEntity
-                    .status(HttpStatus.CONFLICT)
-                    .body(Map.of("error", "User already exists"));
+        if (authRequest.getUsername() == null || authRequest.getPassword() == null || authRequest.getEmail() == null) {
+            throw new BadRequestException("Username, login and email are required");
+        }
+
+        if (userService.isPresentByUsername(username) || userService.isPresentByEmail(authRequest.getEmail())) {
+            throw new UserAlreadyExistException();
         }
 
         User user = new User();
         user.setUsername(username);
+        user.setEmail(authRequest.getEmail());
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(Role.USER);
 
         userService.save(user);
 
-        return ResponseEntity.ok(Map.of(
-                "message", "User registered successfully"
-        ));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,
+                        password
+                )
+        );
+
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        return new AuthResponse(jwtTokenUtil.generateToken(authentication.getName()));
+    }
+
+
+    public User checkCorrectLoginRequest(AuthRequest authRequest) throws BadRequestException, BadCredentialsException {
+        if ((authRequest.getUsername() == null && authRequest.getEmail() == null) || authRequest.getPassword() == null) {
+            throw new BadRequestException("Username or email, and password are required");
+        }
+        User user;
+        try {
+            user = userService.findByEmailOrUsername(authRequest.getEmail(), authRequest.getUsername());
+            if (user == null || !userService.match(user.getUsername(), authRequest.getPassword())) {
+                throw new BadCredentialsException("Invalid username/email or password");
+            }
+            return user;
+        } catch (EntityNotFoundException exception) {
+            throw new BadCredentialsException("Invalid username/email or password");
+        }
     }
 }

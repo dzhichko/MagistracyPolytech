@@ -1,33 +1,34 @@
 package com.example.magistracypolytech.controllers;
 
 import com.example.magistracypolytech.dto.EducationProgramDTO;
-import com.example.magistracypolytech.models.EducationProgram;
+import com.example.magistracypolytech.security.CustomUserDetails;
 import com.example.magistracypolytech.services.EducationProgramService;
+import com.example.magistracypolytech.services.UserFavouriteProgramService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.MediaType;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.List;
 
 @RestController
-@SecurityRequirement(name = "bearerAuth")
+@RequestMapping("/programs")
 @Tag(name = "Education Programs", description = "Управление образовательными программами")
+@RequiredArgsConstructor
 public class ProgramController {
 
     private final EducationProgramService programService;
+    private final UserFavouriteProgramService userFavouriteProgramService;
 
-    public ProgramController(EducationProgramService programService) {
-        this.programService = programService;
-    }
-
-    @GetMapping("/programs")
     @Operation(
             summary = "Получить список программ",
             description = "Возвращает все образовательные программы",
@@ -35,12 +36,56 @@ public class ProgramController {
                     @ApiResponse(
                             responseCode = "200",
                             description = "Успешное получение списка программ"
-
                     )
             }
     )
-    public ResponseEntity<List<EducationProgram>> getPrograms(Model model) throws IOException {
-        return ResponseEntity.status(HttpStatus.OK).body(programService.getAllPrograms());
+    @GetMapping()
+    @Cacheable(value = "programs")
+    public List<EducationProgramDTO> getPrograms(){
+        return programService.getAllPrograms();
     }
+
+    @GetMapping(value = "/download/{code}", produces = MediaType.APPLICATION_PDF_VALUE)
+    public void getProgramFile(@PathVariable String code, HttpServletResponse response) throws IOException {
+        byte[] pdfBytes = programService.getProgramFile(code);
+
+        if (pdfBytes == null) {
+            response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
+
+        response.setContentType(MediaType.APPLICATION_PDF_VALUE);
+        response.setHeader("Content-Disposition", "inline; filename=\"program_" + code + ".pdf\"");
+        response.setContentLength(pdfBytes.length);
+
+        ServletOutputStream os = response.getOutputStream();
+        os.write(pdfBytes);
+        os.flush();
+    }
+
+    @SecurityRequirement(name="bearerAuth")
+    @PostMapping("/favourite/{code}")
+    @PreAuthorize("isAuthenticated()")
+    public void setFavouriteProgram(@PathVariable String code, @AuthenticationPrincipal CustomUserDetails userDetails){
+        long userId = userDetails.getId();
+        userFavouriteProgramService.setFavouriteProgramToUser(code, userId);
+    }
+
+    @SecurityRequirement(name="bearerAuth")
+    @DeleteMapping("/favourite/{code}")
+    @PreAuthorize("isAuthenticated()")
+    public void deleteFavouriteProgram(@PathVariable String code, @AuthenticationPrincipal CustomUserDetails userDetails){
+        long userId = userDetails.getId();
+        userFavouriteProgramService.deleteFavouriteProgramByUserIdAndCode(code,userId);
+    }
+
+    @SecurityRequirement(name="bearerAuth")
+    @GetMapping("/favourite/")
+    @PreAuthorize("isAuthenticated()")
+    public List<EducationProgramDTO> getFavouriteProgram(@AuthenticationPrincipal CustomUserDetails userDetails){
+        long userId = userDetails.getId();
+        return userFavouriteProgramService.getFavouriteProgramsByUser(userId);
+    }
+
 }
 

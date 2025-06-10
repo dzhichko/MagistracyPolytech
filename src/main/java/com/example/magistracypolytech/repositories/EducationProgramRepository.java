@@ -9,4 +9,5 @@ import java.util.Optional;
 @Repository
 public interface EducationProgramRepository extends JpaRepository<EducationProgram, Long> {
     Optional<EducationProgram> findByCode(String code);
+
 }

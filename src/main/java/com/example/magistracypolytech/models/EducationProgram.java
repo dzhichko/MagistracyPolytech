@@ -1,14 +1,12 @@
 package com.example.magistracypolytech.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import static jakarta.persistence.GenerationType.IDENTITY;
 
 @Entity
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
@@ -29,10 +27,26 @@ public class EducationProgram {
     @Column(nullable = false, columnDefinition = "BYTEA")
     private byte[] fileData;
 
-    public EducationProgram(String code, String name, byte[] fileData){
+    @Column(nullable = false)
+    private String institution;
+
+    @Column
+    private String budgetPlace;
+
+    @Column
+    private String contractPlace;
+
+    @Column
+    private String instituteShortName;
+
+    public EducationProgram(String code, String name, byte[] fileData, String institution, String budgetPlace, String contractPlace, String instituteShortName) {
         this.code = code;
         this.name = name;
         this.fileData = fileData;
+        this.institution = institution;
+        this.budgetPlace = budgetPlace;
+        this.contractPlace = contractPlace;
+        this.instituteShortName = instituteShortName;
     }
 
 }

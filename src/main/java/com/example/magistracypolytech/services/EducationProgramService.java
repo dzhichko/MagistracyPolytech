@@ -1,45 +1,47 @@
 package com.example.magistracypolytech.services;
 
 
+import com.example.magistracypolytech.dto.EducationProgramDTO;
+import com.example.magistracypolytech.mappers.EducationProgramMapper;
 import com.example.magistracypolytech.models.EducationProgram;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
-import org.jsoup.Connection;
-import org.jsoup.Jsoup;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
+@RequiredArgsConstructor
 public class EducationProgramService {
 
     private final EducationProgramRepository programRepository;
 
-    @Autowired
-    public EducationProgramService(EducationProgramRepository programRepository){
-        this.programRepository = programRepository;
+    private final EducationProgramMapper programMapper;
+
+    public List<EducationProgramDTO> getAllPrograms(){
+        return programRepository.findAll().
+                stream().map(programMapper::toDTO).collect(Collectors.toList());
     }
 
-    public List<EducationProgram> getAllPrograms(){
-        return programRepository.findAll();
+    public EducationProgram findByCode(String code){
+        return programRepository.findByCode(code).
+                orElseThrow(() -> new EntityNotFoundException("Education program: " + code + " not found"));
+    }
+    public EducationProgram findById(long id){
+        return programRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Education program not found"));
     }
 
-    private void savePdfFromUrl(String url, String filename) throws IOException {
-        Connection.Response response = Jsoup.connect(url)
-                .ignoreContentType(true)
-                .execute();
+    public byte[] getProgramFile(String code){
+        EducationProgram program = programRepository.findByCode(code).
+                orElseThrow(() -> new EntityNotFoundException("Education program: " + code + " not found"));
 
-        try (OutputStream out = new BufferedOutputStream(new FileOutputStream(filename))) {
-            out.write(response.bodyAsBytes());
-        }
+        return program.getFileData();
     }
-
-
 
 }
 
