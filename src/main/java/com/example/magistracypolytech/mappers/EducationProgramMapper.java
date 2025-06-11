@@ -2,9 +2,9 @@ package com.example.magistracypolytech.mappers;
 
 import com.example.magistracypolytech.dto.EducationProgramDTO;
 import com.example.magistracypolytech.models.EducationProgram;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
-@Component
+@Mapper(componentModel = "spring")
 public class EducationProgramMapper {
 
     public EducationProgramDTO toDTO(EducationProgram educationProgram) {
@@ -15,6 +15,7 @@ public class EducationProgramMapper {
                 .contractPlace(educationProgram.getContractPlace())
                 .budgetPlace(educationProgram.getBudgetPlace())
                 .institution(educationProgram.getInstitution())
+                .instituteShortName(educationProgram.getInstituteShortName())
                 .build();
     }
 }

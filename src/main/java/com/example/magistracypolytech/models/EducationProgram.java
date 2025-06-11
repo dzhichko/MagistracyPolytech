@@ -36,13 +36,17 @@ public class EducationProgram {
     @Column
     private String contractPlace;
 
-    public EducationProgram(String code, String name, byte[] fileData, String institution, String budgetPlace, String contractPlace) {
+    @Column
+    private String instituteShortName;
+
+    public EducationProgram(String code, String name, byte[] fileData, String institution, String budgetPlace, String contractPlace, String instituteShortName) {
         this.code = code;
         this.name = name;
         this.fileData = fileData;
         this.institution = institution;
         this.budgetPlace = budgetPlace;
         this.contractPlace = contractPlace;
+        this.instituteShortName = instituteShortName;
     }
 
 }
