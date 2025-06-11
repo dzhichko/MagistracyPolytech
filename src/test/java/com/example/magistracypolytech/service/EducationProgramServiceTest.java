@@ -1,14 +1,17 @@
 package com.example.magistracypolytech.service;
 
 import com.example.magistracypolytech.dto.EducationProgramDTO;
+import com.example.magistracypolytech.mappers.EducationProgramMapper;
 import com.example.magistracypolytech.models.EducationProgram;
 import com.example.magistracypolytech.repositories.EducationProgramRepository;
 import com.example.magistracypolytech.services.EducationProgramService;
 import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
@@ -23,6 +26,9 @@ class EducationProgramServiceTest {
 
     @Mock
     private EducationProgramRepository programRepository;
+
+    @Spy
+    private EducationProgramMapper programMapper = Mappers.getMapper(EducationProgramMapper.class);
 
     @InjectMocks
     private EducationProgramService programService;
@@ -137,6 +143,7 @@ class EducationProgramServiceTest {
         program.setInstitution("Test Institution");
         program.setBudgetPlace("10");
         program.setContractPlace("20");
+        program.setInstituteShortName("TI");
         return program;
     }
 }
