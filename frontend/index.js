@@ -322,7 +322,7 @@ function createCoursePanelEl(course){
             <div class="panel-head">
                 <img src="img/InstituteLogo/ФМИТ.png" alt="ФМИТ ЛОГОТИП">
                 <div class="panel-head-text">
-                <span class="text"> ФМИТ <svg class="point" width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <span class="text"> ${course.instituteShortName} <svg class="point" width="5" height="5" viewBox="0 0 5 5" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <circle cx="2.5" cy="2.5" r="2.5" fill="#184180"/>
                 </svg>
                     ${course.institution.toUpperCase()}
